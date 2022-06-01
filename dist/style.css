@@ -20,11 +20,34 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
 }
 
 .plussign {
     filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(234deg) brightness(103%) contrast(101%);
+    max-height: 20px;
+    cursor: pointer;
+}
+
+.plussign:hover {
+    transform: scale(1.1);
+}
+
+.rightside {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.profilepicture {
+    border: 1px white solid;
+    border-radius: 50px;
+    max-height: 28px;
+}
+
+.profilepicture:hover {
+    transform: scale(1.1);
 }
 
 .menubutton {
@@ -43,6 +66,15 @@ body {
 .main-content {
     flex: 1;
     display: flex;
+}
+
+.sidebar {
+    min-width: max(250px, 15vw);
+    background-color: rgba(0, 0, 0, .1);
+}
+
+.content {
+    min-width: max(600px, 85vw);
 }
 
 .footer {
