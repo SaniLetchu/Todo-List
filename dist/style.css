@@ -69,12 +69,14 @@ body {
 }
 
 .sidebar {
-    min-width: max(250px, 15vw);
+    min-width: 0;
     background-color: rgba(0, 0, 0, .1);
+    transition: 0.5s;
 }
 
 .content {
     min-width: max(600px, 85vw);
+    transition: 0.5s;
 }
 
 .footer {
