@@ -54,6 +54,10 @@ body {
     transform: scale(1.1);
 }
 
+.datewidth {
+    width: 110px;
+}
+
 .menubutton {
     transition: .2s;
     cursor: pointer;
