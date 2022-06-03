@@ -1,6 +1,6 @@
 //Import other scripts
 import {toDoObject, toDoLibrary} from './To_do_object';
-import { compareAsc, format, parseISO} from 'date-fns'
+import { compareAsc, format, isSameDay, parseISO} from 'date-fns'
 import todoCreate from './content';
 
 let sidebarOpen = false;
@@ -128,6 +128,18 @@ function overdueThem() {
     return list;
 }
 
+//Returns todos that have dueDate today
+function samedayThem() {
+    const list = {...toDoLibrary.list};
+    for(let key in list) {
+        let value = list[key];
+        if(!isSameDay(new Date(), parseISO(value.dueDate))) {
+            delete list[key];
+        }
+    }
+    return list;
+}
+
 toDoLibrary.append(new toDoObject("Samsung", "hello", new Date(), "red"));
 
 //Load Home tab as default
@@ -146,6 +158,9 @@ document.querySelector(".overduebutton").addEventListener("click", function() {
     createContent(todoCreate("Overdue", overdueThem));
 });
 
+document.querySelector(".todaybutton").addEventListener("click", function() {
+    createContent(todoCreate("Today", samedayThem));
+});
 
 
 
