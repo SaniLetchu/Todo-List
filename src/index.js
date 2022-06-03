@@ -1,5 +1,5 @@
 //Import other scripts
-import toDoObject from './To_do_object';
+import {toDoObject, toDoLibrary} from './To_do_object';
 import { compareAsc, format } from 'date-fns'
 
 let sidebarOpen = false;
@@ -82,16 +82,17 @@ function createContent(content) {
     divcontent = content;
 }
 
-console.log(localStorage.length);
-
 //Check local storage for information
 (function checkLocaleStorage() {
 
-
     //First time entering website So lets initialize some dummy content
     if(localStorage.length == 0) {
-        let dummycontent1 =  toDoObject()
         //Bulletproof method to not initialize dummy content again even if user deletes everything
         localStorage.setItem(-1, "Already visited site :). Not my fault you deleted everything");
+        //Put dummy content here
+
+    }
+    else {
+        toDoLibrary.download();
     }
 })();
