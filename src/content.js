@@ -39,6 +39,7 @@ function todoCreate(title, objectlist) {
         button.textContent = "Details";
         div.appendChild(button);
         const date = document.createElement("p");
+        date.classList.add("datewidth");
         date.textContent = format(parseISO(value.dueDate), "yyyy-MMM-do");
         const edit = document.createElement("img");
         const trash = document.createElement("img");

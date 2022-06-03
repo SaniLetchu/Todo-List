@@ -129,6 +129,9 @@ function createContent(content) {
 
         toDoLibrary.append(new toDoObject("Date", "Dress up!", sevendays, "red"));
 
+        //Coding project
+
+
     }
     else {
         toDoLibrary.download();
@@ -190,11 +193,11 @@ function weekThem() {
 
 
 //Load Home tab as default
-createContent(todoCreate("Home of To-Dos", allOfThem));
+createContent(todoCreate("TO-DO", allOfThem));
 
 //Eventlisteners for sidebar buttons
 document.querySelector(".homebutton").addEventListener("click", function() {
-    createContent(todoCreate("Home of To-Dos", allOfThem));
+    createContent(todoCreate("TO-DO", allOfThem));
 });
 
 document.querySelector(".completedbutton").addEventListener("click", function() {
@@ -210,7 +213,7 @@ document.querySelector(".todaybutton").addEventListener("click", function() {
 });
 
 document.querySelector(".weekbutton").addEventListener("click", function() {
-    createContent(todoCreate("Week", weekThem));
+    createContent(todoCreate("In a Week", weekThem));
 });
 
 
