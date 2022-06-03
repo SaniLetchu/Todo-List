@@ -1,7 +1,7 @@
 function toDoObject(title, description, dueDate, priority, project = null) {
     this.title = title;
     this.description = description;
-    this.dueDate = dueDate;
+    this.dueDate = JSON.parse(JSON.stringify(dueDate));
     this.priority = priority;
     this.project = project;
     this.completed = false;
@@ -14,9 +14,9 @@ const toDoLibrary = (() => {
     //Download all of the existing toDoObjects from localstorage
     const download = () => {
         let i = 0;
-        while(localStorage.getItem(i) !== null) {
-            let item = localStorage.getItem(i);
-            list[i] = JSON.parse(item);
+        while(localStorage.getItem(`${i}`) !== null) {
+            let item = localStorage.getItem(`${i}`);
+            list[`${i}`] = JSON.parse(item);
             i++;
         }
     }
@@ -24,7 +24,7 @@ const toDoLibrary = (() => {
     const upload = () => {
         for(var key in list) {
             var value = list[key];
-            localStorage.setItem(key, JSON.stringify(value)); 
+            localStorage.setItem(key, JSON.stringify(value));
         }
     }
 
@@ -48,6 +48,15 @@ const toDoLibrary = (() => {
     const remove = (key) => {
         delete list[key];
         localStorage.removeItem(key);
+        let i = 0;
+        for(let key in list) {
+            let value = list[key];
+            delete list[key];
+            localStorage.removeItem(key);
+            list[`${i}`] = value;
+            i++;
+        }
+        upload();
     }
     return {
         list,

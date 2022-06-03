@@ -1,6 +1,7 @@
 //Import other scripts
 import {toDoObject, toDoLibrary} from './To_do_object';
-import { compareAsc, format } from 'date-fns'
+import { compareAsc, format, parseISO} from 'date-fns'
+import todoCreate from './content';
 
 let sidebarOpen = false;
 let innersidebarOpenProject = false;
@@ -74,13 +75,14 @@ function closeInnerNavNotes(name) {
     document.querySelector(name).style.height = "0";
 }
 
-let divcontent = document.querySelector(".content");
+let divcontent = document.querySelector(".todocontent");
 
 //Creates the content in the .content div
 function createContent(content) {
     divcontent.replaceWith(content)
     divcontent = content;
 }
+
 
 //Check local storage for information
 (function checkLocaleStorage() {
@@ -96,3 +98,63 @@ function createContent(content) {
         toDoLibrary.download();
     }
 })();
+
+//Returns all of todos
+function allOfThem() {
+    return {...toDoLibrary.list};
+}
+
+//Return todos that are just completed
+function completedThem() {
+    const list = {...toDoLibrary.list};
+    for(let key in list) {
+        let value = list[key];
+        if(!value.completed) {
+            delete list[key];
+        }
+    }
+    return list;
+}
+
+//Return overdue todos 
+function overdueThem() {
+    const list = {...toDoLibrary.list};
+    for(let key in list) {
+        let value = list[key];
+        if(compareAsc(new Date(), parseISO(value.dueDate)) == -1) {
+            delete list[key];
+        }
+    }
+    return list;
+}
+
+toDoLibrary.append(new toDoObject("Samsung", "hello", new Date(), "red"));
+
+//Load Home tab as default
+createContent(todoCreate("Home of To-Dos", allOfThem));
+
+//Eventlisteners for sidebar buttons
+document.querySelector(".homebutton").addEventListener("click", function() {
+    createContent(todoCreate("Home of To-Dos", allOfThem));
+});
+
+document.querySelector(".completedbutton").addEventListener("click", function() {
+    createContent(todoCreate("Completed", completedThem));
+});
+
+document.querySelector(".overduebutton").addEventListener("click", function() {
+    createContent(todoCreate("Overdue", overdueThem));
+});
+
+
+
+
+
+
+
+
+
+
+
+
+export {createContent};

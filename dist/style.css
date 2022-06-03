@@ -142,8 +142,83 @@ li {
 }
 
 .content {
+    display: grid;
+    grid-template-columns: 1fr 10fr 1fr;
+    grid-template-rows: 1fr 10fr 1fr;
     width: 100vw;
     transition: 0.2s;
+}
+
+.todocontent {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    height: 72vh;
+    gap: 20px;
+    box-shadow: inset rgba(0, 0, 0, 0.1) 0px 10px 20px;
+    border: black 1px solid;
+    overflow: auto;
+    transition: .2s;
+    border-radius: 3px;
+    grid-area: 2 / 2 / 3 / 3;
+}
+
+h1 {
+    text-align: center;
+    grid-area: 1 / 2 / 2 / 3;
+}
+
+.green {
+    border-left: green 5px solid;
+}
+
+.red {
+    border-left: red 5px solid;
+}
+
+.yellow {
+    border-left: yellow 5px solid;
+}
+
+.checkbox {
+    margin-left: 10px;
+    transform: scale(1.5);
+}
+.details {
+    margin-left: auto;
+}
+.todo {
+    transition: 0.2s;
+    padding-right: 20px;
+    border-radius: 5px;
+    margin-left: 50px;
+    margin-right: 50px;
+    background-color: rgb(230, 230, 230);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    height: 50px;
+    max-width: 100%;
+}
+
+.todo:hover {
+    transform: scale(1.001);
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.todo > * {
+    overflow: hidden;
+}
+
+.todoicon {
+    height: 35%;
+    transition: 0.2s;
+}
+
+.todoicon:hover {
+    transform: scale(1.1);
+    filter: invert(18%) sepia(97%) saturate(1853%) hue-rotate(108deg) brightness(99%) contrast(105%);
 }
 
 .footer {
@@ -177,7 +252,7 @@ li {
     background-color: rgb(100, 100, 100);
 }
 
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 1200px) {
     .sidebaricon {
         padding-left: 0;
     }
