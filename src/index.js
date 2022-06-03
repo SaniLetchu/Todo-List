@@ -1,6 +1,6 @@
 //Import other scripts
 import {toDoObject, toDoLibrary} from './To_do_object';
-import { compareAsc, format, isSameDay, parseISO} from 'date-fns'
+import { compareAsc, format, isSameDay, parseISO, differenceInWeeks} from 'date-fns'
 import todoCreate from './content';
 
 let sidebarOpen = false;
@@ -140,7 +140,18 @@ function samedayThem() {
     return list;
 }
 
-toDoLibrary.append(new toDoObject("Samsung", "hello", new Date(), "red"));
+//Return todos that are due in the following next 7 days
+function weekThem() {
+    const list = {...toDoLibrary.list};
+    for(let key in list) {
+        let value = list[key];
+        if(compareAsc(new Date(), parseISO(value.dueDate)) == 1 || differenceInWeeks(new Date(), parseISO(value.dueDate)) != 1) {
+            delete list[key];
+        }
+    }
+    return list;
+}
+
 
 //Load Home tab as default
 createContent(todoCreate("Home of To-Dos", allOfThem));
@@ -160,6 +171,10 @@ document.querySelector(".overduebutton").addEventListener("click", function() {
 
 document.querySelector(".todaybutton").addEventListener("click", function() {
     createContent(todoCreate("Today", samedayThem));
+});
+
+document.querySelector(".weekbutton").addEventListener("click", function() {
+    createContent(todoCreate("Week", weekThem));
 });
 
 
