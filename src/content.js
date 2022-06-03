@@ -50,7 +50,7 @@ function todoCreate(title, objectlist) {
             console.log(key);
             toDoLibrary.remove(key);
             div.parentNode.removeChild(div);
-            createContent(todoCreate("Home of To-Dos", objectlist));
+            createContent(todoCreate(title, objectlist));
         });
         div.appendChild(date);
         div.appendChild(edit);

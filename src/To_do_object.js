@@ -33,7 +33,7 @@ const toDoLibrary = (() => {
         let item = list[key];
         item.title = title; 
         item.description = description;
-        item.dueDate = dueDate;
+        item.dueDate = JSON.parse(JSON.stringify(dueDate));
         item.priority = priority;
         item.completed = completed;
         list[key] = item;

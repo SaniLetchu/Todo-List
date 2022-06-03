@@ -1,6 +1,6 @@
 //Import other scripts
 import {toDoObject, toDoLibrary} from './To_do_object';
-import { compareAsc, format, isSameDay, parseISO, differenceInWeeks} from 'date-fns'
+import { compareAsc, format, isSameDay, parseISO, add} from 'date-fns'
 import todoCreate from './content';
 
 let sidebarOpen = false;
@@ -69,6 +69,7 @@ function openInnerNavNotes(name) {
     }
 }
 
+
 //Close innersidebar
 function closeInnerNavNotes(name) {
     innersidebarOpenNotes = false;
@@ -87,11 +88,46 @@ function createContent(content) {
 //Check local storage for information
 (function checkLocaleStorage() {
 
+    localStorage.clear();
+
     //First time entering website So lets initialize some dummy content
     if(localStorage.length == 0) {
         //Bulletproof method to not initialize dummy content again even if user deletes everything
         localStorage.setItem(-1, "Already visited site :). Not my fault you deleted everything");
         //Put dummy content here
+
+        //Create different dates
+        const today = new Date();
+        const tomorrow = new Date();
+        const threedays = new Date();
+        const fourdays = new Date();
+        const fivedays = new Date();
+        const sevendays = new Date();
+        const eightdays = new Date();
+        const yesterday = new Date();
+        tomorrow.setDate(today.getDate() + 1);
+        threedays.setDate(today.getDate() + 3);
+        fourdays.setDate(today.getDate() + 4);
+        fivedays.setDate(today.getDate() + 5);
+        sevendays.setDate(today.getDate() + 7);
+        eightdays.setDate(today.getDate() + 8);
+        yesterday.setDate(today.getDate() - 1);
+        
+        toDoLibrary.append(new toDoObject("Learn React", "Open Odin Project", today, "red"));
+        toDoLibrary.update("0", "Learn React", "Open Odin Project", today, "red", true);
+
+        toDoLibrary.append(new toDoObject("Eat healthy", "Apple, Carrot", tomorrow, "yellow"));
+
+        toDoLibrary.append(new toDoObject("Watch football", "With friends", threedays, "green"));
+
+        toDoLibrary.append(new toDoObject("Code more", "CODE MORE!!!", yesterday, "red"));
+
+        toDoLibrary.append(new toDoObject("Road trip", "To Mexico!", eightdays, "yellow"));
+
+        toDoLibrary.append(new toDoObject("Wake up", "Wow I woke up", yesterday, "yellow"));
+        toDoLibrary.update("5", "Wake up", "Wow I woke up", yesterday, "yellow", true);
+
+        toDoLibrary.append(new toDoObject("Date", "Dress up!", sevendays, "red"));
 
     }
     else {
@@ -145,7 +181,7 @@ function weekThem() {
     const list = {...toDoLibrary.list};
     for(let key in list) {
         let value = list[key];
-        if(compareAsc(new Date(), parseISO(value.dueDate)) == 1 || differenceInWeeks(new Date(), parseISO(value.dueDate)) != 1) {
+        if(compareAsc(new Date(), parseISO(value.dueDate)) == 1 || compareAsc(add(new Date(), {weeks: 1,}), parseISO(value.dueDate)) == -1) {
             delete list[key];
         }
     }
