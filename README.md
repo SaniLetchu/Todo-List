@@ -23,4 +23,4 @@ Notes can be edited whenever and deleted whenever.
 During this project I practiced using date-fns library and Web Storage API. I also practiced more DOM manipulation and OOP-principles.
 
 Negatives:
-Poor planning lead to messy code.
+Poor planning led to messy code.
