@@ -1,6 +1,6 @@
 import { compareAsc, format, parseISO, isSameDay} from 'date-fns'
 import { toDoLibrary } from './To_do_object';
-import {createContent} from './index'
+import {createContent, createModalContent, closeModal} from './index'
 
 //Given list of objects create content to todocontent
 function todoCreate(title, objectlist) {
@@ -24,6 +24,7 @@ function todoCreate(title, objectlist) {
         input.addEventListener("change", e => {
             if(e.target.checked) {
                 toDoLibrary.update(key, value.title, value.description, value.dueDate, value.priority, true);
+                createContent(todoCreate(title, objectlist));
             }
             else {
                 toDoLibrary.update(key, value.title, value.description, value.dueDate, value.priority, false);
@@ -37,6 +38,56 @@ function todoCreate(title, objectlist) {
         const button = document.createElement("button");
         button.classList.add("details")
         button.textContent = "Details";
+        button.addEventListener("click", function(){
+            let modaldiv = document.createElement("div");
+            modaldiv.classList.add("modal-content");
+            modaldiv.classList.add("details-content");
+            let x = document.createElement("img");
+            x.setAttribute("src", "x.svg");
+            x.classList.add("closemodal");
+            x.addEventListener("click", function(){
+                closeModal();
+            });
+            modaldiv.appendChild(x);
+            let h2 = document.createElement("h2");
+            h2.textContent = value.title;
+            modaldiv.appendChild(h2);
+            let project = document.createElement("h3");
+            project.textContent = "Project:";
+            modaldiv.appendChild(project);
+            let projectstuff = document.createElement("p");
+            projectstuff.textContent = value.project;
+            modaldiv.appendChild(projectstuff);
+            let prioritys = document.createElement("h3");
+            prioritys.textContent = "Priority:";
+            modaldiv.appendChild(prioritys);
+            let priorityvalue = null;
+            if(value.priority == "green") {
+                priorityvalue = "Low";
+            }
+            else if(value.priority == "red") {
+                priorityvalue = "High";
+            }
+            else {
+                priorityvalue = "Medium";
+            }
+            let prioritycontent = document.createElement("p");
+            prioritycontent.textContent = priorityvalue;
+            modaldiv.appendChild(prioritycontent);
+            let duedate = document.createElement("h3");
+            duedate.textContent = "Due Date:";
+            modaldiv.appendChild(duedate);
+            let duedatecontent = document.createElement("p");
+            duedatecontent.textContent = format(parseISO(value.dueDate), "yyyy-MMM-do");
+            modaldiv.appendChild(duedatecontent);
+            let details = document.createElement("h3");
+            details.textContent = "Details:";
+            modaldiv.appendChild(details);
+            let detailscontent = document.createElement("p");
+            detailscontent.textContent = value.description;
+            modaldiv.appendChild(detailscontent)
+            createModalContent(modaldiv);
+        });
         div.appendChild(button);
         const date = document.createElement("p");
         date.classList.add("datewidth");

@@ -2,6 +2,7 @@
 import {toDoObject, toDoLibrary} from './To_do_object';
 import { compareAsc, format, isSameDay, parseISO, add} from 'date-fns'
 import todoCreate from './content';
+import {formDiv} from './form';
 
 let sidebarOpen = false;
 let innersidebarOpenProject = false;
@@ -80,15 +81,29 @@ let divcontent = document.querySelector(".todocontent");
 
 //Creates the content in the .content div
 function createContent(content) {
-    divcontent.replaceWith(content)
+    divcontent.replaceWith(content);
     divcontent = content;
+}
+
+let modalcontent = document.querySelector(".modal-content");
+let modalwindow = document.querySelector(".modal");
+
+//Create content in the modal-content div
+function createModalContent(content) {
+    modalcontent.replaceWith(content);
+    modalcontent = content;
+    modalwindow.style.display = "block";
+}
+
+function closeModal() {
+    modalwindow.style.display = "none";
 }
 
 
 //Check local storage for information
 (function checkLocaleStorage() {
 
-    localStorage.clear();
+    //localStorage.clear();
 
     //First time entering website So lets initialize some dummy content
     if(localStorage.length == 0) {
@@ -158,9 +173,10 @@ function completedThem() {
 //Return overdue todos 
 function overdueThem() {
     const list = {...toDoLibrary.list};
+    const completedlist = completedThem();
     for(let key in list) {
         let value = list[key];
-        if(compareAsc(new Date(), parseISO(value.dueDate)) == -1) {
+        if((compareAsc(new Date(), parseISO(value.dueDate)) == -1 || isSameDay(new Date(), parseISO(value.dueDate))) || completedlist[key] == value) {
             delete list[key];
         }
     }
@@ -170,9 +186,10 @@ function overdueThem() {
 //Returns todos that have dueDate today
 function samedayThem() {
     const list = {...toDoLibrary.list};
+    const completedlist = completedThem();
     for(let key in list) {
         let value = list[key];
-        if(!isSameDay(new Date(), parseISO(value.dueDate))) {
+        if(!isSameDay(new Date(), parseISO(value.dueDate)) || completedlist[key] == value) {
             delete list[key];
         }
     }
@@ -182,14 +199,33 @@ function samedayThem() {
 //Return todos that are due in the following next 7 days
 function weekThem() {
     const list = {...toDoLibrary.list};
+    const completedlist = completedThem();
     for(let key in list) {
         let value = list[key];
-        if(compareAsc(new Date(), parseISO(value.dueDate)) == 1 || compareAsc(add(new Date(), {weeks: 1,}), parseISO(value.dueDate)) == -1) {
+        if((compareAsc(new Date(), parseISO(value.dueDate)) == 1 || compareAsc(add(new Date(), {weeks: 1,}), parseISO(value.dueDate)) == -1) || completedlist[key] == value || isSameDay(new Date(), parseISO(value.dueDate))) {
             delete list[key];
         }
     }
     return list;
 }
+
+//Return list of projects
+function findProjects() {
+    const list = {...toDoLibrary.list};
+    const projects = [];
+    for(let key in list) {
+        let value = list[key];
+        if(value.project != null & !projects.includes(value.project)) {
+            projects.push(value.project);
+        }
+    }
+    return projects;
+}
+
+//Event listener for plusbutton
+document.querySelector(".plussign").addEventListener("click", function(){
+    createModalContent(formDiv());
+});
 
 
 //Load Home tab as default
@@ -226,4 +262,4 @@ document.querySelector(".weekbutton").addEventListener("click", function() {
 
 
 
-export {createContent};
+export {createContent, createModalContent, closeModal, findProjects};
