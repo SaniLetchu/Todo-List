@@ -211,15 +211,8 @@ function weekThem() {
 
 //Return list of projects
 function findProjects() {
-    const list = {...toDoLibrary.list};
-    const projects = [];
-    for(let key in list) {
-        let value = list[key];
-        if(value.project != null & !projects.includes(value.project)) {
-            projects.push(value.project);
-        }
-    }
-    return projects;
+    const list = {...toDoLibrary.projects};
+    return list;
 }
 
 //Event listener for plusbutton

@@ -1,3 +1,5 @@
+import { de } from "date-fns/locale";
+
 function toDoObject(title, description, dueDate, priority, project = null) {
     this.title = title;
     this.description = description;
@@ -7,10 +9,17 @@ function toDoObject(title, description, dueDate, priority, project = null) {
     this.completed = false;
 }
 
+function noteObject(title, description) {
+    this.title = title;
+    this.description = description;
+}
+
 //Module that handles all the toDoObjects inside and outside of localstorage
 const toDoLibrary = (() => {
     //All toDoObjects
     const list = {};
+    const notes = {};
+    const projects = {};
     //Download all of the existing toDoObjects from localstorage
     const download = () => {
         let i = 0;
@@ -19,11 +28,32 @@ const toDoLibrary = (() => {
             list[`${i}`] = JSON.parse(item);
             i++;
         }
+        let j = 0;
+        while(localStorage.getItem(`notes${j}`) !== null) {
+            let item = localStorage.getItem(`notes${i}`);
+            notes[`notes${i}`] = JSON.parse(item);
+            j++;
+        }
+        let z = 0;
+        while(localStorage.getItem(`projects${z}`) !== null) {
+            let item = localStorage.getItem(`projects${z}`);
+            projects[`projects${z}`] = JSON.parse(item);
+            z++;
+        }
+        
     }
     //Uploads all of the toDoObjects to localstorage
     const upload = () => {
         for(var key in list) {
             var value = list[key];
+            localStorage.setItem(key, JSON.stringify(value));
+        }
+        for(var key in notes) {
+            var value = list[key];
+            localStorage.setItem(key, JSON.stringify(value));
+        }
+        for(var key in projects) {
+            var value = projects[key];
             localStorage.setItem(key, JSON.stringify(value));
         }
     }
@@ -39,9 +69,27 @@ const toDoLibrary = (() => {
         list[key] = item;
         upload();
     }
+    //Update note
+    const updateNote = (key, title, description) => {
+        let item = notes[key];
+        item.title = title;
+        item.description = description;
+        notes[key] = item;
+        upload();
+    }
     //Append new object to the list and localstorage
     const append = (object) => {
         list[Object.keys(list).length] = object;
+        upload();
+    }
+    //Add new project
+    const appendProject = (object) => {
+        projects[`projects${Object.keys(projects).length}`] = object;
+        upload();
+    }
+    //Add new note
+    const appendNote = (object) => {
+        notes[`notes${Object.keys(notes).length}`] = object;
         upload();
     }
     //Removes object from list and localstorage
@@ -58,13 +106,48 @@ const toDoLibrary = (() => {
         }
         upload();
     }
+    //Remove note
+    const removeNote = (key) => {
+        delete notes[key];
+        localStorage.removeItem(key);
+        let i = 0;
+        for(let key in notes) {
+            let value = notes[key];
+            delete notes[key];
+            localStorage.removeItem(key);
+            notes[`notes${i}`] = value;
+            i++;
+        }
+        upload();
+    }
+    //Remove project
+    const removeProject = (key) => {
+        delete projects[key];
+        localStorage.removeItem(key);
+        let i = 0;
+        for(let key in projects) {
+            let value = projects[key];
+            delete projects[key];
+            localStorage.removeItem(key);
+            projects[`projects${i}`] = value;
+            i++;
+        }
+        upload();
+    }
     return {
         list,
+        projects,
+        notes,
         download,
         upload,
         update,
+        updateNote,
         append,
-        remove
+        remove,
+        removeNote,
+        removeProject,
+        appendNote,
+        appendProject
     };
 })();
 
