@@ -154,18 +154,6 @@ li:hover {
 }
 
 
-.innersidebar {
-    flex: 0;
-    padding-right: 0;
-    padding-left: 5px;
-    margin-right: 0;
-    margin-left: 0;
-    justify-content: left;
-}
-
-.innersidebartext {
-    flex: 0;
-}
 
 .innersidebar:hover {
     background-color: rgb(210, 210, 210);
@@ -413,6 +401,54 @@ form {
 
 .sidebaritem1 {
     transition: .2s;
+}
+
+.innersidebar {
+    display: flex;
+    flex: 0;
+    padding-right: 0;
+    padding-left: 5px;
+    margin-right: 0;
+    margin-left: 0;
+    justify-content: left;
+}
+
+.innersidebartext {
+    display: flex;
+}
+
+.projecttext {
+    text-align: center;
+}
+
+.titlearea {
+    font-size: 25px;
+    padding: 10px;
+}
+.titlearea:focus {
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    background-color: rgba(0, 0, 0, .1);
+}
+.descriptionarea {
+    height: 100%;
+    padding: 10px;
+}
+
+.descriptionarea:focus {
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    background-color: rgba(0, 0, 0, .05);
+}
+
+.projectdelete {
+    cursor: pointer;
+    color: red;
+    transition: 0.5s;
+    font-size: 20px;
+    border: 2px red solid;
+}
+.projectdelete:hover {
+    color: white;
+    background-color: red;
 }
 
 /* Scrollbar Credit to https://github.com/michalosman/restaurant-page*/
