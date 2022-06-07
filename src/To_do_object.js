@@ -14,6 +14,10 @@ function noteObject(title, description) {
     this.description = description;
 }
 
+function projectObject(title) {
+    this.title = title;
+}
+
 //Module that handles all the toDoObjects inside and outside of localstorage
 const toDoLibrary = (() => {
     //All toDoObjects
@@ -30,8 +34,8 @@ const toDoLibrary = (() => {
         }
         let j = 0;
         while(localStorage.getItem(`notes${j}`) !== null) {
-            let item = localStorage.getItem(`notes${i}`);
-            notes[`notes${i}`] = JSON.parse(item);
+            let item = localStorage.getItem(`notes${j}`);
+            notes[`notes${j}`] = JSON.parse(item);
             j++;
         }
         let z = 0;
@@ -44,17 +48,17 @@ const toDoLibrary = (() => {
     }
     //Uploads all of the toDoObjects to localstorage
     const upload = () => {
-        for(var key in list) {
-            var value = list[key];
+        for(let key in list) {
+            let value = list[key];
             localStorage.setItem(key, JSON.stringify(value));
         }
-        for(var key in notes) {
-            var value = list[key];
-            localStorage.setItem(key, JSON.stringify(value));
+        for(let key1 in notes) {
+            let value = notes[key1];
+            localStorage.setItem(key1, JSON.stringify(value));
         }
-        for(var key in projects) {
-            var value = projects[key];
-            localStorage.setItem(key, JSON.stringify(value));
+        for(let key2 in projects) {
+            let value = projects[key2];
+            localStorage.setItem(key2, JSON.stringify(value));
         }
     }
 
@@ -151,4 +155,4 @@ const toDoLibrary = (() => {
     };
 })();
 
-export {toDoObject, toDoLibrary};
+export {toDoObject, toDoLibrary, noteObject, projectObject};

@@ -1,5 +1,7 @@
-import {createContent, createModalContent, closeModal, findProjects} from './index';
-import {toDoLibrary, toDoObject} from "./To_do_object";
+import {createContent, createModalContent, closeModal, findProjects, updatePage} from './index';
+import {toDoLibrary, toDoObject, noteObject, projectObject} from "./To_do_object";
+
+let currentform = null;  
 
 function formDiv() {
     let formdiv = document.createElement("div");
@@ -89,7 +91,18 @@ function formDiv() {
     ul.appendChild(projects);
     ul.appendChild(notes);
     sidebar.appendChild(ul);
-
+    if(currentform == null) {
+        createFormContent(createForm());
+    }
+    else if(currentform = "todo") {
+        createFormContent(createForm());
+    }
+    else if(currentform = "project") {
+        createFormContent(createProject());
+    }
+    else if(currentform = "notes")  {
+        createFormContent(createNote());
+    }
 
 
     return formdiv;
@@ -97,6 +110,7 @@ function formDiv() {
 
 //Create todoform to formcontent div
 function createForm() {
+    currentform = "todo";
     let div = document.createElement("div");
     div.classList.add("formcontent");
     let form = document.createElement("form");
@@ -127,6 +141,21 @@ function createForm() {
     selectproject.setAttribute("id", "selectproject");
     selectproject.classList.add("selectform");
     form.appendChild(selectproject);
+
+    let optionempty = document.createElement("option");
+    optionempty.setAttribute("value", "");
+    optionempty.textContent = "";
+    selectproject.appendChild(optionempty);
+
+    const list = findProjects();
+    for(let key in list) {
+        let value = list[key];
+        let projectname = value.title;
+        let option = document.createElement("option");
+        option.setAttribute("value", projectname);
+        option.textContent = projectname;
+        selectproject.appendChild(option);
+    }
 
     //Date select
     let datelabel = document.createElement("label");
@@ -197,7 +226,7 @@ function createForm() {
     let button = document.createElement("input");
     button.setAttribute("type", "submit");
     button.classList.add("submitbutton")
-    button.setAttribute("value", "Submit");
+    button.setAttribute("value", "Create new To-do");
     form.appendChild(button);
 
     //Event listener when submit happens
@@ -220,7 +249,9 @@ function createForm() {
             projectvalue = selectproject.value;
         }
         toDoLibrary.append(new toDoObject(titlevalue, descriptionvalue, datevalue, radiovalue, projectvalue));
-
+        updatePage();
+        //Reset form
+        createModalContent(formDiv());
     });
 
     return div;
@@ -228,16 +259,82 @@ function createForm() {
 
 //Create Project form
 function createProject() {
+    currentform = "project";
     let div = document.createElement("div");
     div.classList.add("formcontent");
+
+    let form = document.createElement("form");
+    form.setAttribute("id", "form");
+    form.setAttribute("onsubmit", "return false");
+    form.classList.add("todoformcontent")
+    div.appendChild(form);
+
+    //Title
+    let titleinput = document.createElement("textarea");
+    titleinput.required = true;
+    titleinput.setAttribute("placeholder", "Project: Tower defence game");
+    form.appendChild(titleinput);
+
+    //Submit button
+    let button = document.createElement("input");
+    button.setAttribute("type", "submit");
+    button.classList.add("submitbutton")
+    button.setAttribute("value", "Create new Project");
+    form.appendChild(button);
+
+    //Eventlistener
+    form.addEventListener("submit", function(){
+        let titlevalue = titleinput.value;
+        toDoLibrary.appendProject(new projectObject(titlevalue));
+        updatePage();
+        //Reset form
+        createModalContent(formDiv());
+    });
 
     return div;
 }
 
 //Create Notes form
 function createNote() {
+    currentform = "note";
     let div = document.createElement("div");
     div.classList.add("formcontent");
+
+    let form = document.createElement("form");
+    form.setAttribute("id", "form");
+    form.setAttribute("onsubmit", "return false");
+    form.classList.add("todoformcontent")
+    div.appendChild(form);
+
+    //Title
+    let titleinput = document.createElement("textarea");
+    titleinput.required = true;
+    titleinput.setAttribute("placeholder", "Note: Gym");
+    form.appendChild(titleinput);
+
+    //Description
+    let description = document.createElement("textarea");
+    description.required = true;
+    form.appendChild(description);
+    description.setAttribute("placeholder", "Routine:...");
+    description.classList.add("descriptionform");
+
+    //Submit button
+    let button = document.createElement("input");
+    button.setAttribute("type", "submit");
+    button.classList.add("submitbutton")
+    button.setAttribute("value", "Create new Note");
+    form.appendChild(button);
+
+    //Eventlistener
+    form.addEventListener("submit", function(){
+        let titlevalue = titleinput.value;
+        let descriptionvalue = description.value;
+        toDoLibrary.appendNote(new noteObject(titlevalue, descriptionvalue));
+        updatePage();
+        //Reset form
+        createModalContent(formDiv());
+    });
 
     return div;
 }

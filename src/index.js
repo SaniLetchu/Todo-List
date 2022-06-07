@@ -1,7 +1,7 @@
 //Import other scripts
-import {toDoObject, toDoLibrary} from './To_do_object';
+import {toDoObject, toDoLibrary, noteObject, projectObject} from './To_do_object';
 import { compareAsc, format, isSameDay, parseISO, add} from 'date-fns'
-import todoCreate from './content';
+import {todoCreate} from './content';
 import {formDiv} from './form';
 
 let sidebarOpen = false;
@@ -143,6 +143,13 @@ function closeModal() {
         toDoLibrary.update("5", "Wake up", "Wow I woke up", yesterday, "yellow", true);
 
         toDoLibrary.append(new toDoObject("Date", "Dress up!", sevendays, "red"));
+        toDoLibrary.appendNote(new noteObject("Gym routine", "Bench press: 60kg x 3, Deadlift: 100kg x 3 ..."));
+        toDoLibrary.appendProject(new projectObject("Game Project"));
+        toDoLibrary.append(new toDoObject("Start the project", "Get coding environment working", yesterday, "yellow", "Game Project"));
+        toDoLibrary.update("7", "Start the project", "Get coding environment working", yesterday, "yellow", true);
+        toDoLibrary.append(new toDoObject("Make art", "Likely some pixel art", tomorrow, "red", "Game Project"));
+        toDoLibrary.append(new toDoObject("Map builder", "Very simple map builder and save to JSON format", eightdays, "green", "Game Project"));
+
 
         //Coding project
 
@@ -215,34 +222,156 @@ function findProjects() {
     return list;
 }
 
+//Return list of notes
+function findNotes() {
+    const list = {...toDoLibrary.notes};
+    return list;
+}
+
+//Return todos that are part of a project
+function projectThem() {
+    const list = {...toDoLibrary.list};
+    for(let key in list) {
+        let value = list[key];
+        if(value.project != updateTitle) {
+            delete list[key];
+        }
+    }
+    return list;
+}
+
+function returnempty() {
+    return {};
+}
+
+let noteorprojectkey = null;
+//Creates project tabs to sidebar menu
+function createSidebarProjects() {
+    const list = findProjects();
+    const projectdiv = document.querySelector(".projects");
+    //Delete previous
+    while(projectdiv.firstChild) {
+        projectdiv.removeChild(projectdiv.lastChild);
+    }
+    const ul = document.createElement("ul");
+    for(let key in list) {
+        let value = list[key];
+        let li = document.createElement("li");
+        li.classList.add("sidebarbutton");
+        li.classList.add("sidebaritem");
+        li.classList.add("innersidebar");
+        let name = document.createElement("p");
+        name.classList.add("sidebaritem");
+        name.classList.add("innersidebartext");
+        name.textContent = value.title;
+        li.appendChild(name);
+        li.addEventListener("click", function(){
+            updateTitle = value.title;
+            updatefunction = projectThem;
+            noteorprojectkey = key;
+            createContent(todoCreate(value.title, projectThem));
+        });
+        ul.appendChild(li);
+    }
+    projectdiv.appendChild(ul);
+
+}
+
+
+//Creates project tabs to sidebar menu
+function createSidebarNotes() {
+    const notelist = findNotes();
+    const projectdiv = document.querySelector(".notes");
+    //Delete previous
+    while(projectdiv.firstChild) {
+        projectdiv.removeChild(projectdiv.lastChild);
+    }
+    const ul = document.createElement("ul");
+    for(let key in notelist) {
+        let value = notelist[key];
+        let li = document.createElement("li");
+        li.classList.add("sidebarbutton");
+        li.classList.add("sidebaritem");
+        li.classList.add("innersidebar");
+        let name = document.createElement("p");
+        name.classList.add("sidebaritem");
+        name.classList.add("innersidebartext");
+        name.textContent = value.title;
+        li.appendChild(name);
+        li.addEventListener("click", function(){
+            updateTitle = value.title;
+            updatefunction = returnempty;
+            noteorprojectkey = key;
+            createContent(todoCreate(value.title, returnempty));
+        });
+        ul.appendChild(li);
+    }
+    projectdiv.appendChild(ul);
+
+}
+
+createSidebarNotes();
+
+createSidebarProjects();
+
 //Event listener for plusbutton
 document.querySelector(".plussign").addEventListener("click", function(){
     createModalContent(formDiv());
 });
 
+let updateTitle = null;
+let updatefunction = null;
+
+//Updates the content when called upon
+function updatePage() {
+    createContent(todoCreate(updateTitle, updatefunction));
+    createSidebarProjects();
+    createSidebarNotes();
+}
 
 //Load Home tab as default
-createContent(todoCreate("TO-DO", allOfThem));
+function defaultPage() {
+    noteorprojectkey = null;
+    createContent(todoCreate("TO-DO", allOfThem));
+    updateTitle = "TO-DO";
+    updatefunction = allOfThem;
+}
+defaultPage();
 
 //Eventlisteners for sidebar buttons
 document.querySelector(".homebutton").addEventListener("click", function() {
+    noteorprojectkey = null;
     createContent(todoCreate("TO-DO", allOfThem));
+    updateTitle = "TO-DO";
+    updatefunction = allOfThem;
 });
 
 document.querySelector(".completedbutton").addEventListener("click", function() {
+    noteorprojectkey = null;
     createContent(todoCreate("Completed", completedThem));
+    updateTitle = "Completed";
+    updatefunction = completedThem;
 });
 
 document.querySelector(".overduebutton").addEventListener("click", function() {
+    noteorprojectkey = null;
     createContent(todoCreate("Overdue", overdueThem));
+    updateTitle = "Overdue";
+    updatefunction = overdueThem;
 });
 
 document.querySelector(".todaybutton").addEventListener("click", function() {
+    noteorprojectkey = null;
     createContent(todoCreate("Today", samedayThem));
+    updateTitle = "Today";
+    updatefunction = samedayThem;
 });
 
 document.querySelector(".weekbutton").addEventListener("click", function() {
+    noteorprojectkey = null;
     createContent(todoCreate("In a Week", weekThem));
+    updateTitle = "In a Week";
+    updatefunction = weekThem;
 });
 
 
@@ -255,4 +384,4 @@ document.querySelector(".weekbutton").addEventListener("click", function() {
 
 
 
-export {createContent, createModalContent, closeModal, findProjects};
+export {createContent, createModalContent, closeModal, findProjects, updatePage, defaultPage, noteorprojectkey};

@@ -1,6 +1,6 @@
 import { compareAsc, format, parseISO, isSameDay} from 'date-fns'
 import { toDoLibrary } from './To_do_object';
-import {createContent, createModalContent, closeModal} from './index'
+import {createContent, createModalContent, closeModal, defaultPage, updatePage, findProjects, noteorprojectkey} from './index'
 
 //Given list of objects create content to todocontent
 function todoCreate(title, objectlist) {
@@ -99,7 +99,6 @@ function todoCreate(title, objectlist) {
         edit.classList.add("todoicon");
         trash.classList.add("todoicon");
         trash.addEventListener("click", function() {
-            console.log(key);
             toDoLibrary.remove(key);
             div.parentNode.removeChild(div);
             createContent(todoCreate(title, objectlist));
@@ -110,9 +109,64 @@ function todoCreate(title, objectlist) {
 
         maindiv.appendChild(div);
     }
+    //If empty
+    let projectslist = findProjects();
+    var hasproject = false;
+    for(let key in projectslist) {
+        let value = projectslist[key];
+        if(value.title == title) {
+            hasproject = true;
+        }
+    }
+    if(!maindiv.hasChildNodes() && hasproject) {
+        let emptyproject = document.createElement("h2");
+        emptyproject.textContent = "Empty Project!";
+        emptyproject.classList.add("projecttext");
+        let text = document.createElement("h3");
+        text.textContent = "Create To-do task or delete Project";
+        text.classList.add("projecttext");
+        let deletebutton = document.createElement("button");
+        deletebutton.textContent = "Delete Project";
+        deletebutton.classList.add("projectdelete");
+        deletebutton.addEventListener("click", function(){
+            toDoLibrary.removeProject(noteorprojectkey);
+            //Default to home page
+            //Load Home tab as default
+            defaultPage();
+            updatePage();
+        });
+        maindiv.appendChild(emptyproject);
+        maindiv.appendChild(text);
+        maindiv.appendChild(deletebutton);
+    }
+    if(noteorprojectkey != null) {
+        if(noteorprojectkey.includes("note")) {
+            while(maindiv.firstChild) {
+                maindiv.removeChild(maindiv.lastChild);
+            }
+            heading.textContent = "";
+            let itemvalue = toDoLibrary.notes[noteorprojectkey];
+            let titlearea = document.createElement("textarea");
+            titlearea.textContent = itemvalue.title;
+            titlearea.classList.add("titlearea");
+            titlearea.addEventListener("keyup", function(){
+                toDoLibrary.updateNote(noteorprojectkey, titlearea.value, descriptionarea.value);
+            });
+            let descriptionarea = document.createElement("textarea");
+            descriptionarea.classList.add("descriptionarea");
+            descriptionarea.addEventListener("keyup", function(){
+                toDoLibrary.updateNote(noteorprojectkey, titlearea.value, descriptionarea.value);
+            });
+            descriptionarea.textContent = itemvalue.description;
+            maindiv.appendChild(titlearea);
+            maindiv.appendChild(descriptionarea);
+        }
+    }
+
     return maindiv;
 }
 
 
 
-export default todoCreate;
+
+export {todoCreate};
