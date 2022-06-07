@@ -1,6 +1,6 @@
 import {createContent, createModalContent, closeModal, findProjects, updatePage} from './index';
 import {toDoLibrary, toDoObject, noteObject, projectObject} from "./To_do_object";
-
+import { compareAsc, format, parseISO, isSameDay} from 'date-fns'
 let currentform = null;  
 
 function formDiv() {
@@ -262,6 +262,7 @@ function createProject() {
     currentform = "project";
     let div = document.createElement("div");
     div.classList.add("formcontent");
+    div.classList.add("modal-content");
 
     let form = document.createElement("form");
     form.setAttribute("id", "form");
@@ -339,4 +340,146 @@ function createNote() {
     return div;
 }
 
-export {formDiv};
+//Create todoform to formcontent div
+function createEditForm(key) {
+    let div = document.createElement("div");
+    div.classList.add("formcontent");
+    div.classList.add("editform");
+    let form = document.createElement("form");
+    form.setAttribute("id", "form");
+    form.setAttribute("onsubmit", "return false");
+    form.classList.add("todoformcontent")
+
+    let itemvalue = toDoLibrary.list[key];
+    
+
+    //closeform
+    let closex = document.createElement("img");
+    closex.setAttribute("src", "x.svg");
+    closex.addEventListener("click", function(){
+        closeModal();
+    });
+    div.appendChild(closex);
+
+    div.appendChild(form);
+
+    //Title
+    let titleinput = document.createElement("textarea");
+    titleinput.required = true;
+    titleinput.textContent = itemvalue.title;
+    titleinput.setAttribute("placeholder", "Title: Pay bills");
+    form.appendChild(titleinput);
+
+    //Description
+    let description = document.createElement("textarea");
+    description.required = true;
+    description.textContent = itemvalue.description;
+    form.appendChild(description);
+    description.setAttribute("placeholder", "Details: e.g internet, phone, rent.");
+    description.classList.add("descriptionform");
+
+    //Date select
+    let datelabel = document.createElement("label");
+    datelabel.setAttribute("for", "selectdate");
+    datelabel.textContent = "Due Date:"
+    form.appendChild(datelabel);
+    let selectdate = document.createElement("input");
+    selectdate.setAttribute("value", format(parseISO(itemvalue.dueDate), "yyyy-MM-dd"));
+    selectdate.required = true;
+    selectdate.setAttribute("id", "selectdate");
+    selectdate.setAttribute("type", "date");
+    selectdate.classList.add("selectdate");
+    form.appendChild(selectdate);
+
+    //Priority
+    let prioritylabel = document.createElement("label");
+    prioritylabel.setAttribute("for", "selectpriority");
+    prioritylabel.textContent = "Priority:"
+    form.appendChild(prioritylabel);
+    //Low
+    let divlow = document.createElement("div");
+    divlow.classList.add("divlow")
+    let low = document.createElement("input");
+    low.required = true;
+    low.setAttribute("type", "radio");
+    low.setAttribute("value", "green");
+    low.setAttribute("name", "priority");
+    low.setAttribute("id", "low");
+    divlow.appendChild(low);
+    let lowlable = document.createElement("label");
+    lowlable.classList.add("radiotext");
+    lowlable.textContent = "Low";
+    lowlable.setAttribute("for", "low");
+    divlow.appendChild(lowlable);
+    form.appendChild(divlow)
+
+    //Medium
+    let divmedium = document.createElement("div");
+    let medium = document.createElement("input");
+    divmedium.classList.add("divmedium")
+    medium.setAttribute("type", "radio");
+    medium.setAttribute("value", "yellow");
+    medium.setAttribute("name", "priority");
+    medium.setAttribute("id", "medium");
+    divmedium.appendChild(medium);
+    let mediumlable = document.createElement("label");
+    mediumlable.classList.add("radiotext");
+    mediumlable.textContent = "Medium";
+    mediumlable.setAttribute("for", "medium");
+    divmedium.appendChild(mediumlable);
+    form.appendChild(divmedium)
+
+    //High
+    let divhigh = document.createElement("div");
+    divhigh.classList.add("divhigh");
+    let high = document.createElement("input");
+    high.setAttribute("type", "radio");
+    high.setAttribute("value", "red");
+    high.setAttribute("name", "priority");
+    high.setAttribute("id", "high");
+    divhigh.appendChild(high);
+    let highlable = document.createElement("label");
+    highlable.classList.add("radiotext");
+    highlable.textContent = "High";
+    highlable.setAttribute("for", "high");
+    divhigh.appendChild(highlable);
+    form.appendChild(divhigh)
+
+    if(itemvalue.priority == "green") {
+        low.checked = true;
+    }
+    if(itemvalue.priority == "red") {
+        high.checked = true;
+    }
+    if(itemvalue.priority == "yellow") {
+        medium.checked = true;
+    }
+
+    let button = document.createElement("input");
+    button.setAttribute("type", "submit");
+    button.classList.add("submitbutton")
+    button.setAttribute("value", "Create new To-do");
+    form.appendChild(button);
+
+    //Event listener when submit happens
+    form.addEventListener("submit", function(){
+        let titlevalue = titleinput.value;
+        let descriptionvalue = description.value;
+        let datevalue = selectdate.valueAsDate;
+        let radioelement = document.getElementsByName("priority");
+        let radiovalue = null;
+        for(let radio of radioelement) {
+            if (radio.checked) {
+                radiovalue = radio.value;
+            }
+        }
+        toDoLibrary.update(key, titlevalue, descriptionvalue, datevalue, radiovalue);
+        updatePage();
+        //Reset form
+        closeModal();
+    });
+
+    return div;
+}
+
+export {formDiv, createEditForm};

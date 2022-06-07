@@ -1,5 +1,6 @@
 import { compareAsc, format, parseISO, isSameDay} from 'date-fns'
 import { toDoLibrary } from './To_do_object';
+import {createEditForm} from "./form";
 import {createContent, createModalContent, closeModal, defaultPage, updatePage, findProjects, noteorprojectkey} from './index'
 
 //Given list of objects create content to todocontent
@@ -97,6 +98,9 @@ function todoCreate(title, objectlist) {
         edit.setAttribute("src", "edit.svg");
         trash.setAttribute("src", "trash.svg");
         edit.classList.add("todoicon");
+        edit.addEventListener("click", function(){
+            createModalContent(createEditForm(key));
+        });
         trash.classList.add("todoicon");
         trash.addEventListener("click", function() {
             toDoLibrary.remove(key);
@@ -144,6 +148,17 @@ function todoCreate(title, objectlist) {
             while(maindiv.firstChild) {
                 maindiv.removeChild(maindiv.lastChild);
             }
+            let deletenote = document.createElement("button");
+            deletenote.textContent = "Delete Note";
+            deletenote.classList.add("projectdelete");
+            deletenote.addEventListener("click", function(){
+                toDoLibrary.removeNote(noteorprojectkey);
+                //Default to home page
+                //Load Home tab as default
+                defaultPage();
+                updatePage();
+            });
+
             heading.textContent = "";
             let itemvalue = toDoLibrary.notes[noteorprojectkey];
             let titlearea = document.createElement("textarea");
@@ -160,6 +175,7 @@ function todoCreate(title, objectlist) {
             descriptionarea.textContent = itemvalue.description;
             maindiv.appendChild(titlearea);
             maindiv.appendChild(descriptionarea);
+            maindiv.appendChild(deletenote);
         }
     }
 
