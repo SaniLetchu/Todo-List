@@ -457,7 +457,7 @@ function createEditForm(key) {
     let button = document.createElement("input");
     button.setAttribute("type", "submit");
     button.classList.add("submitbutton")
-    button.setAttribute("value", "Create new To-do");
+    button.setAttribute("value", "Confirm changes");
     form.appendChild(button);
 
     //Event listener when submit happens

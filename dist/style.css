@@ -395,6 +395,7 @@ form {
 }
 
 .editform {
+    border: 1px black solid;
     width: 80vw;
     height: 50vh;
     min-height: 400px;
