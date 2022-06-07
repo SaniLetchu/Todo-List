@@ -183,11 +183,11 @@ li {
 }
 
 .content {
+    margin: auto;
     display: grid;
     grid-template-columns: 1fr 10fr 1fr;
     grid-template-rows: 1fr 10fr 1fr;
     width: 100vw;
-    transition: 0.2s;
 }
 
 .todocontent {
@@ -200,7 +200,6 @@ li {
     box-shadow: inset rgba(0, 0, 0, 0.1) 0px 10px 20px;
     border: black 1px solid;
     overflow: auto;
-    transition: .2s;
     border-radius: 3px;
     grid-area: 2 / 2 / 3 / 3;
 }
@@ -474,6 +473,10 @@ form {
 
 .editform > img:hover {
     transform: scale(1.1);
+}
+
+.notes, .projects {
+    display: none;
 }
 
 /* Scrollbar Credit to https://github.com/michalosman/restaurant-page*/

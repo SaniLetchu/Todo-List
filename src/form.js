@@ -262,7 +262,6 @@ function createProject() {
     currentform = "project";
     let div = document.createElement("div");
     div.classList.add("formcontent");
-    div.classList.add("modal-content");
 
     let form = document.createElement("form");
     form.setAttribute("id", "form");
@@ -473,7 +472,7 @@ function createEditForm(key) {
                 radiovalue = radio.value;
             }
         }
-        toDoLibrary.update(key, titlevalue, descriptionvalue, datevalue, radiovalue);
+        toDoLibrary.update(key, titlevalue, descriptionvalue, datevalue, radiovalue, itemvalue.completed);
         updatePage();
         //Reset form
         closeModal();

@@ -20,6 +20,10 @@ function openNav() {
         //document.querySelector(".content").style.marginLeft = "15vw";
         document.querySelector(".content").style.maxWidth = "85vw";
         let items = document.querySelectorAll(".sidebaritem");
+        let projectstab = document.querySelector(".projects");
+        let notestab = document.querySelector(".notes");
+        projectstab.style.display = "block";
+        notestab.style.display = "block";
         [].forEach.call(items, function(item) {
             item.style = "display: flex";
         });
@@ -36,6 +40,10 @@ function closeNav() {
     document.querySelector(".sidebar").style.maxWidth = "0";
     //document.querySelector(".content").style.marginLeft= "0";
     document.querySelector(".content").style.maxWidth = "100vw";
+    let projectstab = document.querySelector(".projects");
+    let notestab = document.querySelector(".notes");
+    projectstab.style.display = "none";
+    notestab.style.display = "none";
     let items = document.querySelectorAll(".sidebaritem");
     [].forEach.call(items, function(item) {
         item.style = "display: none";
@@ -139,8 +147,8 @@ function closeModal() {
 
         toDoLibrary.append(new toDoObject("Road trip", "To Mexico!", eightdays, "yellow"));
 
-        toDoLibrary.append(new toDoObject("Wake up", "Wow I woke up", yesterday, "yellow"));
-        toDoLibrary.update("5", "Wake up", "Wow I woke up", yesterday, "yellow", true);
+        toDoLibrary.append(new toDoObject("Dress up for the event", "Maybe that black suit", yesterday, "yellow"));
+        toDoLibrary.update("5", "Dress up for the event", "Maybe that black suit", yesterday, "yellow", true);
 
         toDoLibrary.append(new toDoObject("Date", "Dress up!", sevendays, "red"));
         toDoLibrary.appendNote(new noteObject("Gym routine", "Bench press: 60kg x 3, Deadlift: 100kg x 3 ..."));
@@ -149,6 +157,7 @@ function closeModal() {
         toDoLibrary.update("7", "Start the project", "Get coding environment working", yesterday, "yellow", true);
         toDoLibrary.append(new toDoObject("Make art", "Likely some pixel art", tomorrow, "red", "Game Project"));
         toDoLibrary.append(new toDoObject("Map builder", "Very simple map builder and save to JSON format", eightdays, "green", "Game Project"));
+        toDoLibrary.append(new toDoObject("Watch TV", "Star wars", today, "green"));
 
 
         //Coding project
